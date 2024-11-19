@@ -2,49 +2,58 @@ import puppeteer from 'puppeteer';
 
 const fetchTweetDataWithMedia = async (url) => {
     const browser = await puppeteer.launch({
-        headless: true, // Set to 'false' to see the browser in action for debugging
+        headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        timeout: 60000,
     });
+
 
     const page = await browser.newPage();
 
     try {
-        // Navigate to the tweet URL
         await page.goto(url, { waitUntil: 'networkidle2' });
-
-        // Wait for the main tweet content to load
         await page.waitForSelector('article');
 
-        // Extract tweet content including text, images, and videos
         const tweetData = await page.evaluate(() => {
-            // Get the main text of the tweet
+            // const getInnerText = (selector) =>
+            //     document.querySelector(selector)?.innerText || 'N/A';
+
             const caption =
                 document.querySelector('div[data-testid="tweetText"]')
                     ?.innerText || 'No text found';
 
-            // Extract all image URLs
             const images = Array.from(
                 document.querySelectorAll('img')
             )
                 .map((img) => img.src)
                 .filter((src) => src.includes('media'));
 
-            return { caption, images };
+            // Timestamp
+            const timestamp =
+                document
+                    .querySelector('time')
+                    ?.getAttribute('datetime') || 'N/A';
+
+            return {
+                caption,
+                images,
+                timestamp,
+            };
         });
 
-        const username = url.toString().split('/')[3];
-        const video = url.toString().replace(username, 'i');
-        // console.log(video);
+        const username = url.split('/')[3];
+        const videoLink = url.replace(username, 'i');
 
-        console.log('Tweet Data:', {
+        const data = {
             ...tweetData,
-            videoLink: video,
+            videoLink,
             username,
-        });
+        };
+
+        return data;
     } catch (error) {
         console.error('Error fetching tweet data:', error);
     } finally {
-        // Close the browser
         await browser.close();
     }
 };
