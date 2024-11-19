@@ -16,10 +16,6 @@ const fetchInstagramDataWithMedia = async (url) => {
                     document.querySelector('meta[property="og:title"]')?.content || null,
                 image:
                     document.querySelector('meta[property="og:image"]')?.content || null,
-                imageW:
-                    document.querySelector('meta[property="og:image:width"]')?.content || null,
-                imageH:
-                    document.querySelector('meta[property="og:image:height"]')?.content || null,
                 description:
                     document.querySelector('meta[property="og:description"]')?.content || null,
             };
