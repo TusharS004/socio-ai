@@ -23,8 +23,7 @@ def download_from_url(url):
 
 
 if __name__ == "__main__":
-    # post_url = input()
-    post_url = "https://x.com/Hiphop_Premi/status/1859564998114091421"
+    post_url = input()
     result = download_from_url(post_url)
     shortCode = result["shortcode"]
     type = result["type"]
