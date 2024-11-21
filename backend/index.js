@@ -4,6 +4,9 @@ import { getInstagramPost, getTweet } from "./src/controllers/socialMedia.contro
 import { analyzeWithGemini } from "./src/controllers/gemini.controller.js";
 import { connect } from "./src/db/connect.js";
 import authRoutes from "./src/routes/auth.js";
+import socialMediaRoutes from "./src/routes/social-media.js";
+import productListingRoutes from "./src/routes/amazon-listing.js";
+import {authenticateUser} from "./src/utils/helper.js";
 import cors from "cors";
 
 const app = express();
@@ -20,6 +23,12 @@ app.get("/api", (req, res) => {
 });
 
 app.use('/auth', authRoutes);
+
+app.use("/api", authenticateUser);
+
+app.use("/api/post", socialMediaRoutes);
+app.use("/api/product", productListingRoutes);
+
 app.get('/api/tweet', getTweet);
 app.get('/api/instagram', getInstagramPost);
 app.get('/api/analyze', analyzeWithGemini);
