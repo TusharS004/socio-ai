@@ -1,13 +1,9 @@
 import axios from "axios"
 import {getInsta, getTweet} from "./socialMedia.controller.js"
 import {downloadImage} from "./twitterImages.controller.js";
-import fs, { mkdir } from "fs"
+import fs from "fs"
 import path from "path"
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+import { extract_index } from "../extractor/index.js";
 
 export const getPost = async (req, res, next) =>{
     const urlString = req.body.url;
@@ -16,15 +12,17 @@ export const getPost = async (req, res, next) =>{
 
         // Check for Instagram
         if (url.hostname.includes('instagram.com')) {
-            const shortcode = url.pathname.endsWith('/')
-            ? url.pathname.split('/').slice(-2, -1)[0]
-            : url.pathname.split('/').pop();
-
             const data = await getInsta(url)
             // From Flask
             const response = await axios.post(`${process.env.FLASK_URL}/api/url`, {
                 url
             });
+
+            const shortcode = response.data.data.shortcode; 
+            //Need to pass request to model for analysis and response generation
+            extract_index(`../media/instagram/-${shortcode}`)
+
+
 
             if(!data || !data.title) {
                 return res.status(404).json({ message: "No Instagram post data found." });
