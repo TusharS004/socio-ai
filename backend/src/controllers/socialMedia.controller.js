@@ -8,7 +8,8 @@ export const getTweet = async (url) => {
         return data;
     } catch (error) {
         console.error("Error fetching tweet data:", error);
-        return res.status(500).json({ message: "Failed to fetch tweet data." });
+        return null;
+        // return res.status(500).json({ message: "Failed to fetch tweet data." });
     }
 };
 
@@ -18,6 +19,7 @@ export const getInsta = async (url) => {
         return data;
     } catch (error) {
         console.error("Error fetching tweet data:", error);
-        return res.status(500).json({ message: "Failed to fetch tweet data." });
+        return null;
+        // return res.status(500).json({ message: "Failed to fetch tweet data." });
     }
 };

@@ -10,11 +10,11 @@ def greet():
         if not url:
             return jsonify({"error": "URL is required"}), 400
 
-        print(f"{url} from app.py")    
+        print(f"{url} from app.py")
         result = download_from_url(url)
         if result is None:
             return jsonify({"error": "Invalid URL format"}), 400
-        
+
         return jsonify({"message": "Success", "data": result}), 200
 
     except Exception as e:

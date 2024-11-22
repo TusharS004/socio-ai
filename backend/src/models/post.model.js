@@ -15,9 +15,9 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
-        url: {
+        url: [{
             type: String, // url
-        },
+        }],
     },
     { timestamps: true }
 );

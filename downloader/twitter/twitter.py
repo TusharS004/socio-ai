@@ -5,8 +5,9 @@ import yt_dlp
 
 def download_tweet_media(url,shortcode):
     current_directory = os.getcwd()
-    
-    relative_path = f'..\socio-ai\media\{shortcode}/' 
+
+
+    relative_path = f'..\socio-ai\media\{shortcode}/'
 
     absolute_download_path = os.path.join(current_directory, relative_path)
 
@@ -16,7 +17,7 @@ def download_tweet_media(url,shortcode):
         # yt-dlp options
         ydl_opts = {
             'format': 'best',
-            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.%(ext)s'), 
+            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.%(ext)s'),
             'quiet': False,  # Set to True to suppress output
         }
 
