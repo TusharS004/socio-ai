@@ -12,7 +12,6 @@ export function downloadImage(url, filepath) {
             response.pipe(file);
             file.on('finish', () => {
                 file.close();
-                console.log(`Image downloaded successfully: ${filepath}`);
             });
         } else {
             console.error(`Failed to get image: ${response.statusCode}`);
