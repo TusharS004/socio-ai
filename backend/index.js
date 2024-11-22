@@ -22,15 +22,26 @@ app.get("/api", (req, res) => {
     res.send("API is Running.");
 });
 
+
+// Authentication
 app.use('/auth', authRoutes);
 
+// Session Stored
 app.use("/api", authenticateUser);
 
+// Post Extracted Json Data
 app.use("/api/post", socialMediaRoutes);
+
+// Amazon Listed Data
 app.use("/api/product", productListingRoutes);
 
+// Twitter
 app.get('/api/tweet', getTweet);
+
+// Instagram
 app.get('/api/instagram', getInstagramPost);
+
+// Analyze Data using AI Model
 app.get('/api/analyze', analyzeWithGemini);
 
 app.listen(PORT, () => {
