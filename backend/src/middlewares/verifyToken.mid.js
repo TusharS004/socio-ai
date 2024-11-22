@@ -1,19 +1,29 @@
 import jwt from 'jsonwebtoken';
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization'] || req.headers['token'];
+    try {
 
-    if (!token) {
-        return res.status(403).send({ message: 'No token provided!' });
-    }
+        const token = req.headers['authorization'] || req.headers['token'] || req.headers.cookie.split("=")[1];
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: 'Unauthorized!' });
+        if (!token) {
+            return res.status(403).send({ message: 'No token provided!' });
         }
-        req.userId = decoded;
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).send({ message: 'Unauthorized!' });
+            }
+            req.user = decoded;
+        });
+        if (!req.user._id) {
+            return res.status(403).send({ message: 'Invalid Token' });
+        }
         next();
-    });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(400).json({ message: error.message });
+    }
 };
 
 export default verifyToken;

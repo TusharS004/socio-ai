@@ -10,8 +10,8 @@ router.route('/')
     .post(verifyToken, postController.createPost);
 router.route('/:id')
     .get(postController.getPostById)
-    .put(postController.updatePost)
-    .delete(postController.deletePost);
+    .put(verifyToken, postController.updatePost)
+    .delete(verifyToken, postController.deletePost);
 
 
 export default router;

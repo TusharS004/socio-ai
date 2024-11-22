@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import generateToken from "../utils/generateToken.js";
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -20,18 +21,107 @@ export const getUserById = async (req, res) => {
     }
 };
 
-export const createUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        if (req.body.username.toLowerCase().includes('guest')) {
+            return res.status(400).json({ message: 'Username cannot contain the word "guest"' });
+        }
+        if (req.body.email === 'guest000@guest.com') {
+            return res.status(400).json({ message: 'Email cannot be @guest.com.' });
+        }
+        const { username, email, password } = req.body;
         const user = new User({
-            name,
+            username,
             email,
             password
         });
         const newUser = await user.save();
-        return res.status(201).json(newUser);
+        req.status = 201;
+        req.user = newUser;
+
+        req.json = {
+            message: 'User registered successfully',
+        }
+        return generateTokenCont(req, res);
     } catch (error) {
         return res.status(400).json({ message: error.message });
+    }
+};
+
+export const guestUser = async (req, res) => {
+    try {
+        const user = new User({
+            username: 'guest',
+            email: 'guest000@guest.com',
+            password: 'guest000'
+        });
+        const newUser = await user.save();
+        req.status = 201;
+        req.user = newUser;
+        req.json = {
+            message: 'Guest user created successfully',
+        }
+
+        return generateTokenCont(req, res);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+};
+
+export const loginUser = async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+        if (!password) {
+            return res.status(400).json({ message: 'Please enter email and password' });
+        }
+        const user = await User.findOne({ $or: [{ email }, { username }] });
+
+        if (!user || !(await user?.matchPassword(password))) {
+
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        req.user = user;
+
+        req.status = 200;
+        req.json = {
+            message: 'User logged in successfully',
+            data: user
+        }
+
+        return generateTokenCont(req, res);
+    } catch (error) {
+        console.error(error);
+        return res.status(400).json({ message: error.message });
+    }
+};
+
+export const logoutUser = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(403).json({ message: 'You are not logged in' });
+        }
+
+        return res
+            .clearCookie('token')
+            .status(200)
+            .json({ message: 'User logged out successfully' });
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+};
+
+export const logoutGuest = async (req, res) => {
+    try {
+        if(!req.user) {
+            return res.status(403).json({ message: 'You are not logged in' });
+        }
+        const user = await User.findByIdAndDelete(req.user._id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        return res.status(200).json({ message: 'Guest user logged & deleted' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -62,5 +152,25 @@ export const deleteUser = async (req, res) => {
         return res.status(200).json({ message: 'User deleted' });
     } catch (error) {
         return res.status(500).json({ message: error.message });
+    }
+};
+
+export const generateTokenCont = async (req, res) => {
+    try {
+        if (!req.user._id) {
+            return res.status(403).json({ message: 'You are not authorized to create this product' });
+        }
+        const token = await generateToken(req.user._id);
+
+        return res
+            .cookie('token', token, {
+                httpOnly: true,
+            })
+            .status(req.status || 201)
+            .json(req.json || "Token Generated Succesfully.");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).json({ message: error.message });
     }
 };

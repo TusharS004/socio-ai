@@ -8,7 +8,7 @@ router.route('/all')
     .get(productController.getAllProducts);
 
 router.route('/')
-    .post(productController.createProduct);
+    .post(verifyToken, productController.createProduct);
 
 router.route('/:id')
     .get(verifyToken, productController.getProductById)

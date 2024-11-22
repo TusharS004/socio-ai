@@ -1,8 +1,13 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const postSchema = new mongoose.Schema(
+const postSchema = new Schema(
     {
-        userId: {
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        title: {
             type: String,
             required: true,
         },
@@ -10,21 +15,13 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        username: {
-            type: String,
-            required: true,
-        },
-        platform: {
-            type: String,
-            required: true,
-        },
-        imageUrl: {
-            type: String,
+        url: {
+            type: String, // url
         },
     },
     { timestamps: true }
 );
 
-const Post = mongoose.model('Post', postSchema);
+const Post = model('Post', postSchema);
 
 export default Post;

@@ -5,10 +5,22 @@ import * as userConroller from "../controllers/user.controller.js";
 const router = Router();
 
 router.route('/all')
-    .get(userConroller.getAllUsers);
+    .get(verifyToken, userConroller.getAllUsers);
 
-router.route('/')
-    .get(userConroller.createUser);
+router.route('/register')
+    .post(userConroller.registerUser);
+
+router.route('/guest')
+    .post(userConroller.guestUser);
+
+router.route('/guest/logout')
+    .get(verifyToken, userConroller.logoutGuest);
+
+router.route('/login')
+    .get(userConroller.loginUser);
+
+router.route('/logout')
+    .get(verifyToken, userConroller.logoutUser);
 
 router.route('/:id')
     .get(verifyToken, userConroller.getUserById)
