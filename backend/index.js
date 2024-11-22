@@ -1,9 +1,11 @@
 import express from "express";
 import "dotenv/config.js";
-import { getInstagramPost, getTweet } from "./src/controllers/socialMedia.controller.js";
-import { connect } from "./src/config/db.config.js";
+
+import { getPost } from "./src/controllers/getPost.controller.js";
+// import { connect } from "./src/config/db.config.js";
 import routes from "./src/routes/index.js";
 import cors from "cors";
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;

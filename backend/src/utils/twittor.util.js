@@ -6,7 +6,8 @@ const fetchTweetDataWithMedia = async (url) => {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         timeout: 60000,
     });
-
+    
+    url = url.href;    
 
     const page = await browser.newPage();
 
@@ -15,9 +16,6 @@ const fetchTweetDataWithMedia = async (url) => {
         await page.waitForSelector('article');
 
         const tweetData = await page.evaluate(() => {
-            // const getInnerText = (selector) =>
-            //     document.querySelector(selector)?.innerText || 'N/A';
-
             const caption =
                 document.querySelector('div[data-testid="tweetText"]')
                     ?.innerText || 'No text found';
@@ -49,7 +47,7 @@ const fetchTweetDataWithMedia = async (url) => {
             videoLink,
             username,
         };
-
+        
         return data;
     } catch (error) {
         console.error('Error fetching tweet data:', error);
@@ -59,3 +57,4 @@ const fetchTweetDataWithMedia = async (url) => {
 };
 
 export default fetchTweetDataWithMedia;
+ 
