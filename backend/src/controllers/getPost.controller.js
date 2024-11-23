@@ -1,3 +1,4 @@
+import axios from 'axios';
 import path from 'path';
 import { getInsta, getTweet } from "./socialMedia.controller.js";
 

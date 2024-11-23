@@ -6,8 +6,7 @@ import { upload_video } from "./video.js";
 
 dotenv.config();
 
-const API_KEY = 'AIzaSyCQl171VmSkUiFpn0TaF09JLNKLHubZTlA';
-// const API_KEY = process.env.GOOGLE_API_KEY;
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 const fileManager = new GoogleAIFileManager(API_KEY);
 
