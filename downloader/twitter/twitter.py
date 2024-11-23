@@ -3,38 +3,34 @@ import yt_dlp
 
 # DOWNLOAD_PATH = "./downloads/twitter/"  # Default download path
 
-def download_tweet_media(url,shortcode):
+def download_tweet_media(url, shortcode):
+
     current_directory = os.getcwd()
-
-
-    relative_path = f'..\socio-ai\media\{shortcode}/'
-
+    relative_path = f'..\socio-ai\media\{shortcode}'
     absolute_download_path = os.path.join(current_directory, relative_path)
 
-    print(absolute_download_path)
+    # print(absolute_download_path)
 
     try:
         # yt-dlp options
         ydl_opts = {
             'format': 'best',
-            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.%(ext)s'),
-            'quiet': False,  # Set to True to suppress output
+            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.mp4'),
+            'quiet': False
         }
-
-        print(ydl_opts)
-
-    #     # Extract metadata first
-        # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        #     info = ydl.extract_info(url, download=False)
-        #     print(f"Tweet Title: {info.get('title', 'No Title Available')}")
 
         # Download the media
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        print("Download complete.")
+        print(f"Downloaded media saved to: {absolute_download_path}")
+
+        return {"status": True, "message": "Download successful."}
 
     except yt_dlp.utils.DownloadError as e:
-        print(f"Download error: {e}")
+        return {"status": True, "message": "No video found."}
+        # Handles No Video Error
+
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        return {"status": False, "error": e}

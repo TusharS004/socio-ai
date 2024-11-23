@@ -1,33 +1,24 @@
-import puppeteer from "puppeteer";
-
 const fetchInstagramDataWithMedia = async (url) => {
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    const download_media = await fetch(process.env.FLASK_URL + "/api/url", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: url }),
     });
-    const page = await browser.newPage();
 
-    try {
-        await page.goto(url, { waitUntil: 'networkidle2' });
-
-        const openGraphData = await page.evaluate(() => {
-            return {
-                title:
-                    document.querySelector('meta[property="og:title"]')?.content || null,
-                image:
-                    document.querySelector('meta[property="og:image"]')?.content || null,
-                description:
-                    document.querySelector('meta[property="og:description"]')?.content || null,
-            };
-        });
-
-        return { ...openGraphData };
-    } catch (error) {
-        console.error('Error scraping Instagram post:', error);
-        return null;
-    } finally {
-        await browser.close();
+    if(!download_media) {
+        console.error("Error fetching Instagram data.");
+        return;
     }
+
+    const data = await download_media.json();
+    if (!data.message) {
+        console.error("Error fetching Instagram data. ", data);
+        return;
+    }
+
+    return data;
 };
 
 export default fetchInstagramDataWithMedia;

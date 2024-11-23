@@ -13,11 +13,27 @@ const postSchema = new Schema(
         },
         content: {
             type: String,
+        },
+        url: {
+            type: String,
             required: true,
         },
-        url: [{
-            type: String, // url
-        }],
+        images: [
+            {
+                type: {
+                    url: String,
+                    public_id: String,
+                }, // URL
+            },
+        ],
+        videos: [
+            {
+                type: {
+                    url: String,
+                    public_id: String,
+                }, // URL
+            },
+        ],
     },
     { timestamps: true }
 );

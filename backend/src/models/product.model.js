@@ -22,9 +22,11 @@ const productSchema = new Schema(
             type: Number,
             default: 0,
         },
-        category: [{
-            type: String,
-        }],
+        category: [
+            {
+                type: String,
+            },
+        ],
         status: {
             type: String,
             enum: ['draft', 'listed'],
@@ -35,12 +37,22 @@ const productSchema = new Schema(
             ref: 'User',
             required: true,
         },
-        image: [{
-            type: String, // URL
-        }],
-        video: [{
-            type: String, // URL
-        }],
+        images: [
+            {
+                type: {
+                    url: String,
+                    public_id: String,
+                }, // Cloudinary URL
+            },
+        ],
+        videos: [
+            {
+                type: {
+                    url: String,
+                    public_id: String,
+                }, // Cloudinary URL
+            },
+        ],
     },
     { timestamps: true }
 );

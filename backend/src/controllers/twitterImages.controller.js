@@ -17,15 +17,7 @@ export function downloadImage(url, filepath) {
             console.error(`Failed to get image: ${response.statusCode}`);
         }
     }).on('error', (err) => {
-        fs.unlink(filepath); // Delete the file if there's an error
+        fs.unlinkSync(filepath); // Delete the file if there's an error
         console.error(`Error downloading image: ${err.message}`);
     });
 }
-
-// Example usage
-// Uncomment and provide a valid image URL and output file path
-// const imageUrl = 'https://pbs.twimg.com/media/Gc5EJd9awAASzBu?format=jpg&name=small';
-
-
-// const outputFilePath = 'twitter_image.jpg';
-// downloadImage(imageUrl, outputFilePath);

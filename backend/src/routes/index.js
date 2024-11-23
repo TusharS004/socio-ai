@@ -13,6 +13,6 @@ router.get('/', (req, res) => {
 router.use('/users', userRoutes);
 router.use('/posts', postRoutes);
 router.use('/products', prodRoutes);
-router.get('/url', getPost);
+router.post('/url', getPost);
 
 export default router;

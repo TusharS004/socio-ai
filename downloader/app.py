@@ -15,7 +15,10 @@ def greet():
         if result is None:
             return jsonify({"error": "Invalid URL format"}), 400
 
-        return jsonify({"message": "Success", "data": result}), 200
+        if "error" in result:
+            return jsonify(result), 500
+        else:
+            return jsonify(result), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

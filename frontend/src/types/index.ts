@@ -1,11 +1,11 @@
-export interface SocialMediaPost {
-    _id: string;
-    userId: string;
-    content: string;
-    createdAt: Date;
+export interface ExtractedPost {
+    id: string;
     username: string;
-    platform: string;
-    imageUrl?: string;
+    title: string;
+    content: string;
+    url: string;
+    images?: string[];
+    videos?: string[];
 }
 
 export interface AmazonProductListing {
@@ -18,6 +18,13 @@ export interface AmazonProductListing {
     rating: number;
     reviews: number;
     stock: number;
-    category?: string;
+    category?: string[];
     status?: 'draft' | 'listed';
+}
+
+export interface ExtractedMedia {
+    id: string;
+    url: string;
+    type: 'image' | 'video';
+    thumbnail?: string;
 }

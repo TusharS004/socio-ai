@@ -14,7 +14,6 @@ app.use(cors({ origin: "*" }));
 app.use('/api', routes);
 
 connect().then(() => {
-    console.log("Connected to the database");
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });

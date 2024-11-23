@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs';
 export function saveToFile(filename, data) {
     fs.writeFile(filename, data, (err) => {
         if (err) {
@@ -7,4 +7,4 @@ export function saveToFile(filename, data) {
             console.log(`Data saved successfully to ${filename}`);
         }
     });
-  }
+}
