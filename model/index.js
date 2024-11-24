@@ -16,10 +16,12 @@ const video_model = genAI.getGenerativeModel({model: "gemini-1.5-pro"});
 
 // Media Path from Download
 const mediaPath = [
-    'https://res.cloudinary.com/diutjor80/image/upload/v1732229952/Socio-AI/sqiu03lnmi8c6wsnqbcf.jpg',
+    // 'https://res.cloudinary.com/diutjor80/image/upload/v1732229952/Socio-AI/sqiu03lnmi8c6wsnqbcf.jpg',
     // 'https://res.cloudinary.com/diutjor80/video/upload/v1719990872/Youtube-ChaiAurCode-Backend/m1dh1tp4o4ju60eu8egr.mp4',
     // 'https://res.cloudinary.com/diutjor80/video/upload/v1719990756/Youtube-ChaiAurCode-Backend/resierqa72lpxijsn8lz.mp4',
-    'https://res.cloudinary.com/diutjor80/video/upload/v1732351693/Socio-AI/15_seconds_of_nature_oq8ylg.mp4',
+    // 'https://res.cloudinary.com/diutjor80/video/upload/v1732351693/Socio-AI/15_seconds_of_nature_oq8ylg.mp4',
+    'https://res.cloudinary.com/diutjor80/video/upload/v1732407646/Socio-AI/IWM16_ngg4is.mp4',
+    'https://res.cloudinary.com/diutjor80/image/upload/v1732405163/Socio-AI/ycpnyflyfpmpy31u5r0q.jpg',
 ];
 
 
