@@ -34,7 +34,8 @@ export const getPost = async (req, res, next) => {
                 message: 'No data found.',
             });
         }
-        return res.status(200).json(data);
+        req.body = {...data, url: urlString};
+        next();
     } catch (error) {
         console.error('Error in getPost:', error.message);
         return res.status(400).json({

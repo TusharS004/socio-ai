@@ -40,16 +40,18 @@ const productSchema = new Schema(
         images: [
             {
                 type: {
-                    url: String,
-                    public_id: String,
+                    url: { type: String, required: true },
+                    public_id: { type: String, required: true },
+                    _id: false
                 }, // Cloudinary URL
             },
         ],
         videos: [
             {
                 type: {
-                    url: String,
-                    public_id: String,
+                    url: { type: String, required: true },
+                    public_id: { type: String, required: true },
+                    _id: false
                 }, // Cloudinary URL
             },
         ],

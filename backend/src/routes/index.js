@@ -13,6 +13,5 @@ router.get('/', (req, res) => {
 router.use('/users', userRoutes);
 router.use('/posts', postRoutes);
 router.use('/products', prodRoutes);
-router.post('/url', getPost);
 
 export default router;

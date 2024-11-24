@@ -5,7 +5,11 @@ import cloudinary from "../config/cloudinary.config.js";
 export const uploadToCloudinary = async (filePath) => {
     try {
 
-        const result = await cloudinary.uploader.upload(path.resolve(filePath), {
+        if (!filePath.includes('http://') && !filePath.includes('https://')) {
+            filePath = path.resolve(filePath);
+        }
+
+        const result = await cloudinary.uploader.upload(filePath, {
             type: 'upload',
             resource_type: 'auto',
             folder: process.env.CLOUDINARY_FOLDER,
@@ -15,10 +19,10 @@ export const uploadToCloudinary = async (filePath) => {
     } catch (error) {
         throw new Error('Failed to upload image to Cloudinary');
     } finally {
-        // Delete the file after uploading to Cloudinary
-        fs.unlinkSync(filePath);
-        console.log('Deleted file:', filePath);
-
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log('Deleted file:', filePath);
+        }
     }
 };
 

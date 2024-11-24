@@ -14,7 +14,7 @@ export const getTweet = async (url, assetCwd) => {
         data.images = data.images?.length ? await Promise.all(
             data.images.map(async (image) => {
                 const result = await uploadToCloudinary(image);
-                return result.url;
+                return result;
             })
         ) : [];
 
@@ -34,7 +34,7 @@ export const getTweet = async (url, assetCwd) => {
             };
         } else {
             let { videos } = await categorizeFiles(assetCwd);
-            console.log('Videos:', videos);
+            // console.log('Videos:', videos);
 
             videos = videos?.length ? await Promise.all(
                 videos.map(async (video) => {
@@ -59,6 +59,9 @@ export const getTweet = async (url, assetCwd) => {
     } catch (error) {
         console.error('Error fetching tweet data:', error);
         return null;
+    } finally {
+        if(fs.existsSync(assetCwd))
+            fs.rmdirSync(assetCwd, { recursive: true });
     }
 };
 
@@ -96,6 +99,7 @@ export const getInsta = async (url, assetCwd) => {
         console.error('Error fetching Insta data:', error);
         return null;
     } finally {
-        fs.rmdirSync(assetCwd, { recursive: true });
+        if(fs.existsSync(assetCwd))
+            fs.rmdirSync(assetCwd, { recursive: true });
     }
 };
