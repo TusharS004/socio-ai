@@ -176,7 +176,7 @@ export const generateTokenCont = async (req, res) => {
         return res
             .cookie('token', token, {
                 httpOnly: true,
-                sameSite: 'Strict', // csrf
+                sameSite: 'None', // csrf
             })
             .status(req.status || 201)
             .json(
