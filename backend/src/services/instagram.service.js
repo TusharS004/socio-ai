@@ -1,4 +1,5 @@
 const fetchInstagramDataWithMedia = async (url) => {
+    console.log("Fetching Instagram data with media.");
     const download_media = await fetch(process.env.FLASK_URL + "/api/url", {
         method: "POST",
         headers: {

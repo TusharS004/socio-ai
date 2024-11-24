@@ -2,18 +2,18 @@ import jwt from 'jsonwebtoken';
 
 const verifyToken = (req, res, next) => {
     try {
-        console.log(
-            req?.headers,
-            '-+-',
-            req?.cookies?.token,
-            '-+-',
-            req.cookies,
-            '-+-',
-            req.cookie,
-            '-+-',
-            req.headers?.authorization?.split(' ')[1],
-            '-----------------------------------------------------------------'
-        );
+        // console.log(
+        //     req?.headers,
+        //     '-+-',
+        //     req?.cookies?.token,
+        //     '-+-',
+        //     req.cookies,
+        //     '-+-',
+        //     req.cookie,
+        //     '-+-',
+        //     req.headers?.authorization?.split(' ')[1],
+        //     '-----------------------------------------------------------------'
+        // );
 
         const token =
             req?.cookies?.token ||
