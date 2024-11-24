@@ -33,6 +33,3 @@ def download_from_url(url):
             return {"message": result["message"] }
         else:
             return {"error": result["error"]}
-
-
-

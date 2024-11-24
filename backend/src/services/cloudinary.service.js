@@ -17,6 +17,8 @@ export const uploadToCloudinary = async (filePath) => {
     } finally {
         // Delete the file after uploading to Cloudinary
         fs.unlinkSync(filePath);
+        console.log('Deleted file:', filePath);
+
     }
 };
 

@@ -1,19 +1,20 @@
-import { saveToFile } from './saveToFile.js';
+import { saveToFile } from './saveToFile.util.js';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 
-export async function upload_image(url, model, fileManager) {
-
+export async function generateWithImage(url, model, fileManager) {
     const temp = path.basename(url);
 
-    if (fs.existsSync(`${temp.slice(0, temp.lastIndexOf('.'))}.txt`)) {
+    if (
+        fs.existsSync(`${temp.slice(0, temp.lastIndexOf('.'))}.txt`)
+    ) {
         // saveToFile(`${temp}.txt`, 'Video');
         console.log('File already exists');
         return;
     }
 
-    if(!url.startsWith('http')) {
+    if (!url.startsWith('http')) {
         console.log('wrong url');
         return;
     }
@@ -24,8 +25,8 @@ export async function upload_image(url, model, fileManager) {
 
     // Step 2: Save the file temporarily
     const tempFileName = `temp_${temp}`;
-    const tempFilePath = path.join('./temp', tempFileName);
-    fs.mkdirSync('./temp', { recursive: true });
+    const tempFilePath = path.join('../temp', tempFileName);
+    fs.mkdirSync('../temp', { recursive: true });
     fs.writeFileSync(tempFilePath, response.data);
 
     const uploadResult = await fileManager.uploadFile(tempFilePath, {
@@ -45,5 +46,8 @@ export async function upload_image(url, model, fileManager) {
 
     fs.unlinkSync(tempFilePath);
 
-    saveToFile(`./temp/${temp.slice(0, temp.lastIndexOf('.'))}.txt`, result_image.response.text());
+    saveToFile(
+        `../temp/${temp.slice(0, temp.lastIndexOf('.'))}.txt`,
+        result_image.response.text()
+    );
 }

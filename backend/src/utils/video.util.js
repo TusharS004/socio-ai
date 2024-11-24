@@ -1,13 +1,14 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { saveToFile } from './saveToFile.js';
+import { saveToFile } from './saveToFile.util.js';
 
-export async function upload_video(url, model, fileManager) {
-
+export async function generateWithVideo(url, model, fileManager) {
     const temp = path.basename(url);
 
-    if (fs.existsSync(`${temp.slice(0, temp.lastIndexOf('.'))}.txt`)) {
+    if (
+        fs.existsSync(`${temp.slice(0, temp.lastIndexOf('.'))}.txt`)
+    ) {
         // saveToFile(`${temp}.txt`, 'Video');
         console.log('File already exists');
         return;
@@ -22,18 +23,18 @@ export async function upload_video(url, model, fileManager) {
         responseType: 'arraybuffer',
     });
 
-    // Step 2: Save the file temporarily
     const tempFileName = `temp_${temp}`;
-    const tempFilePath = path.join('./temp', tempFileName);
-    fs.mkdirSync('./temp', { recursive: true });
+    const tempFilePath = path.join('../temp', tempFileName);
+    fs.mkdirSync('../temp', { recursive: true });
     fs.writeFileSync(tempFilePath, response.data);
 
-    const uploadResponse = await fileManager.uploadFile(tempFilePath, {
-        mimeType: 'video/mp4',
-        displayName: 'Product Video',
-    });
-
-
+    const uploadResponse = await fileManager.uploadFile(
+        tempFilePath,
+        {
+            mimeType: 'video/mp4',
+            displayName: 'Product Video',
+        }
+    );
 
     const result_video = await model.generateContent([
         {
@@ -50,6 +51,9 @@ export async function upload_video(url, model, fileManager) {
     fs.unlinkSync(tempFilePath);
 
     // if (`${temp}.txt`) {
-    saveToFile(`./temp/${temp.slice(0, temp.lastIndexOf('.'))}.txt`, result_video.response.text());
+    saveToFile(
+        `../temp/${temp.slice(0, temp.lastIndexOf('.'))}.txt`,
+        result_video.response.text()
+    );
     // }
 }

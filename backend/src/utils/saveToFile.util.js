@@ -13,7 +13,7 @@ export async function saveToFile(filename, data) {
 
 export async function categorizeFiles(folderPath) {
     const categorizedFiles = {
-        title: [], // Correctly handling text files
+        content: [], // Correctly handling text files
         images: [],
         videos: [],
     };
@@ -29,7 +29,7 @@ export async function categorizeFiles(folderPath) {
             const ext = path.extname(item).toLowerCase();
 
             if (ext === '.txt') {
-                categorizedFiles.title.push(item); // Fixed this to push into "title"
+                categorizedFiles.content.push(item);
             } else if (ext === '.jpg') {
                 categorizedFiles.images.push(item);
             } else if (ext === '.mp4') {

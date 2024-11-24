@@ -5,12 +5,11 @@ export const createPost = async (req, res) => {
         return res.status(403).json({ message: 'You are not authorized to create this post' });
 
     try {
-        const { title, content, url } = req.body;
-        if(!title || !content)
-            return res.status(400).json({ message: 'Title and content are required' });
+        const { content, url } = req.body;
+        if(!content)
+            return res.status(400).json({ message: 'Content is required' });
 
         const post = new Post({
-            title,
             content,
             url,
             owner: req.user._id,

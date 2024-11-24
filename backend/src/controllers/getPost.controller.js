@@ -1,5 +1,5 @@
 import path from 'path';
-import { getInsta, getTweet } from "./socialMedia.controller.js";
+import { getInsta, getTweet } from "../utils/socialMedia.util.js";
 
 export const getPost = async (req, res, next) => {
     const urlString = req.body.url;
