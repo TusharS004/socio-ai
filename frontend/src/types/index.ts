@@ -1,30 +1,28 @@
 export interface ExtractedPost {
-    id: string;
-    username: string;
-    title: string;
+    _id: string;
+    owner: string;
     content: string;
-    url: string;
+    url?: string;
     images?: string[];
     videos?: string[];
 }
 
 export interface AmazonProductListing {
     _id: string;
+    brand?: string;
+    url?: string;
     title: string;
     description: string;
-    price: number;
+    price: string;
     currency: string;
-    imageUrl: string;
-    rating: number;
-    reviews: number;
     stock: number;
     category?: string[];
     status?: 'draft' | 'listed';
+    images?: string[];
+    videos: string[];
 }
 
 export interface ExtractedMedia {
-    id: string;
     url: string;
     type: 'image' | 'video';
-    thumbnail?: string;
 }

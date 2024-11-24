@@ -15,7 +15,7 @@ export async function generateWithImage(url, model, fileManager) {
     }
 
     if (!url.startsWith('http')) {
-        console.log('wrong url');
+        console.error('wrong url');
         return;
     }
 

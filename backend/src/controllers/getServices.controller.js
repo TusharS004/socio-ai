@@ -56,10 +56,11 @@ export const getAnalysis = async (req, res, next) => {
                 message: "No Url's provided."
             })
         }
+        // console.log(url, id);
 
         const getPost = await Post.findOne({ $or:[
-            {url: url},
-            {_id: id} 
+            {url},
+            {_id: id}
         ]});
         if(!getPost) {
             return res.status(404).json({
@@ -67,9 +68,11 @@ export const getAnalysis = async (req, res, next) => {
                 message: "No Posts Found."
             });
         }
+        // console.log(getPost);
+
 
         const response = await generateWithGemini([
-            ...getPost.images, 
+            ...getPost.images,
             ...getPost.videos
         ], getPost.content);
 
@@ -81,7 +84,7 @@ export const getAnalysis = async (req, res, next) => {
         }
 
         // TODO:- Save The response.json Product.
-        
+
 
         return res.status(200).json(response);
 

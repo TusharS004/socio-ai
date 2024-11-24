@@ -11,7 +11,7 @@ export const createPost = async (req, res) => {
         if (url) {
             const checExists = await Post.findOne({ url });
             if (checExists)
-                return res.status(400).json({ message: 'Post already exists', data: checExists });
+                return res.status(200).json(checExists);
         }
 
         if(!content)

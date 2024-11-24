@@ -1,3 +1,4 @@
+'use client';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -6,11 +7,30 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import axios from 'axios';
 import { Button } from '../ui/button';
 import { Bell, Menu, Search, User } from 'lucide-react';
 import { Input } from '../ui/input';
+import { useAuth } from './AuthProvider';
+import Link from 'next/link';
 
 const Navbar = () => {
+    const { user, setUser } = useAuth();
+    const handleLogout = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/logout`, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                setUser(null);
+            } else {
+                console.error("Failed to logout");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
     return (
         <header className="bg-gray-900 border-b border-gray-800">
             <div className="container mx-auto px-4">
@@ -49,7 +69,8 @@ const Navbar = () => {
                             <span className="absolute top-0 right-0 h-2 w-2 bg-blue-500 rounded-full"></span>
                         </Button>
 
-                        <DropdownMenu>
+                        {user ? (
+                            <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
@@ -57,24 +78,39 @@ const Navbar = () => {
                                     className="text-gray-400 hover:text-white"
                                 >
                                     <User className="h-5 w-5" />
+                                    {user.username}
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56 bg-gray-900 border-gray-800">
-                                <DropdownMenuLabel className="text-gray-300">
-                                    My Account
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator className="bg-gray-800" />
-                                <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
-                                    Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
-                                    Settings
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
-                                    Logout
-                                </DropdownMenuItem>
+                                {user && (
+                                    <>
+                                        <DropdownMenuLabel className="text-gray-300">
+                                            My Account
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator className="bg-gray-800" />
+                                        <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
+                                            Profile
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
+                                            Settings
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="text-gray-300 focus:bg-gray-800 focus:text-white">
+                                            <button
+                                                onClick={handleLogout}
+                                            >
+                                                Logout
+                                            </button>
+                                        </DropdownMenuItem>
+                                    </>
+                                )}
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                            </DropdownMenu>
+                        ) : (
+                            <Link href="/auth" className='text-gray-400 hover:text-white'>
+                                Login
+                            </Link>
+                        )}
+
                     </div>
                 </div>
             </div>

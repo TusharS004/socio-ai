@@ -8,20 +8,18 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-vanish-input';
-import {
-    Instagram,
-    Twitter,
-    Youtube,
-} from 'lucide-react';
+import { Instagram, Twitter, Youtube } from 'lucide-react';
+import axios, { AxiosError } from 'axios';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ExtractedPostView } from '@/components/Home/ExtractedPost/extractedPost.main';
 import { ExtractedPost } from '@/types/index.js';
+import { useAuth } from '@/components/global/AuthProvider';
+import { redirect } from 'next/navigation';
 
 const samplePost: ExtractedPost = {
-    id: '1',
-    title: 'Sample Post 1',
-    username: 'sample_user',
-    content: 'This is a sample post content',
+    _id: '1',
+    content: 'Sample Post 1',
+    owner: 'sample_user',
     url: 'https://www.instagram.com/p/111111111/',
     images: [
         'https://via.placeholder.com/300',
@@ -32,34 +30,32 @@ const samplePost: ExtractedPost = {
 
 const HomePage = () => {
     const [link, setLink] = useState('');
+    const { user, setUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    // const [posts, setAllPosts] =
-    //     useState<ExtractedPost[] | null>(null);
-    const [posts, setAllPosts] =
-        useState<ExtractedPost[] | null>([samplePost]);
+    const [posts, setAllPosts] = useState<ExtractedPost[] | null>([
+        samplePost,
+    ]);
     const [error, setError] = useState('');
 
-    const fetchPost = async (url: string) => {
+    const addPost = async (url: string) => {
         setIsLoading(true);
         setError('');
 
         try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/url`, {
-                    method: 'POST',
+            const response = await axios.post<ExtractedPost>(
+                `${process.env.NEXT_PUBLIC_API_URL}/posts/url`,
+                { url },
+                {
+                    withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json',
-                        credentials: 'include',
                     },
-                    body: JSON.stringify({ url }),
                 }
             );
-            const data: ExtractedPost = await response.json();
-            if (!data) throw new Error('Invalid link');
-            // setAllPosts((prev) => (prev ? [...prev, data] : [data]));
 
-            setAllPosts([data]);
-
+            setAllPosts([response.data]);
+            // TODO: For Multiple posts
+            // setAllPosts((prev: ExtractedPost[] | null) => (prev ? [...prev, response.data] : [response.data]));
         } catch (err) {
             console.error(err);
             setError('Failed to load content. Please try again.');
@@ -72,29 +68,52 @@ const HomePage = () => {
         console.log('Deleting Post:', id);
         setAllPosts((prev: ExtractedPost[] | null) => {
             if (!prev) return null;
-            return prev.filter((post) => post.id !== id);
+            return prev.filter((post) => post._id !== id);
         });
 
         // api
-
         // setPosts(null);
-    }
+    };
 
-    const handlePaste = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handlePaste = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
         e.preventDefault();
         setLink(link.trim());
-        if (link.trim().length > 0) {
-            const response = await fetchPost(link);
-        } else {
-            setError('Please enter a valid link');
+        addPost(link);
+    };
+
+    const handleTokens = async () => {
+        try {
+            if (!user) {
+                const res = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/users/verify`,
+                    { withCredentials: true }
+                );
+
+                if (res.status === 200 && res.data) {
+                    setUser(res.data);
+                } else {
+                    redirect('/auth');
+                }
+            }
+        } catch (error: AxiosError | any) {
+            if (
+                error?.response &&
+                [401, 403].includes(error?.response?.status)
+            ) {
+                redirect('/auth')
+            }
+            console.error(
+                'Token verification failed:',
+                error
+            );
         }
     };
 
     useEffect(() => {
-        if (link.trim().length > 0) {
-            fetchPost(link);
-        }
-    }, []);
+        handleTokens(); // Verify user on component mount
+    }, []); // Empty dependency to avoid infinite loop
 
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100">

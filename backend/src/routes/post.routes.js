@@ -21,6 +21,4 @@ router.route('/:id')
     .put(verifyToken, postController.updatePost)
     .delete(verifyToken, postController.deletePost);
 
-router.route('/analyze').post(verifyToken,getAnalysis);
-
 export default router;

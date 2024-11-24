@@ -15,7 +15,7 @@ export async function generateWithVideo(url, model, fileManager) {
     }
 
     if (!url.startsWith('http')) {
-        console.log('wrong url');
+        console.error('wrong url');
         return;
     }
 

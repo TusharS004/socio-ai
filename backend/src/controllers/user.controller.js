@@ -36,13 +36,11 @@ export const registerUser = async (req, res) => {
             password
         });
         const newUser = await user.save();
-        req.status = 201;
-        req.user = newUser;
-
-        req.json = {
-            message: 'User registered successfully',
-        }
-        return generateTokenCont(req, res);
+        return res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            data: newUser,
+        })
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -71,6 +69,7 @@ export const guestUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+
         if (!password) {
             return res.status(400).json({ message: 'Please enter email and password' });
         }
@@ -102,6 +101,7 @@ export const logoutUser = async (req, res) => {
             return res.status(403).json({ message: 'You are not logged in' });
         }
 
+        // console.log('here');
         return res
             .clearCookie('token')
             .status(200)
@@ -162,15 +162,35 @@ export const generateTokenCont = async (req, res) => {
         }
         const token = await generateToken(req.user._id);
 
+
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
         return res
             .cookie('token', token, {
                 httpOnly: true,
             })
             .status(req.status || 201)
-            .json(req.json || "Token Generated Succesfully.");
+            .json(req.json || {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                isGuest: user.username.includes('guest')
+            });
     }
     catch (error) {
         console.error(error);
         return res.status(400).json({ message: error.message });
+    }
+};
+
+export const verifyTokenCont = async (req, res) => {
+    try {
+        if (!req.user) return res.status(404).send({ success: false, message: "User not Found!" });
+        const user = await User.findById(req.user._id);
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        return res.status(400).json({ success: false, message: error.message });
     }
 };
