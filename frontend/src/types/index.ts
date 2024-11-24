@@ -15,11 +15,11 @@ export interface AmazonProductListing {
     description: string;
     price: string;
     currency: string;
-    stock: number;
+    stock: number | 0;
     category?: string[];
     status?: 'draft' | 'listed';
     images?: string[];
-    videos: string[];
+    videos?: string[];
 }
 
 export interface ExtractedMedia {

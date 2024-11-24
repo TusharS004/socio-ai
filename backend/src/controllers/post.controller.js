@@ -10,6 +10,9 @@ export const createPost = async (req, res) => {
 
         if (url) {
             url = url.trim().split('?')[0];
+            if (url.lastIndexOf("/") === url.length - 1) {
+                url = url.substring(0,url.length - 1) ;
+            }
             const checExists = await Post.findOne({ url });
             if (checExists)
                 return res.status(200).json(checExists);

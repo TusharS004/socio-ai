@@ -12,7 +12,10 @@ import { Instagram, Twitter, Youtube } from 'lucide-react';
 import axios, { AxiosError } from 'axios';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ExtractedPostView } from '@/components/Home/ExtractedPost/extractedPost.main';
-import { ExtractedPost } from '@/types/index.js';
+import {
+    AmazonProductListing,
+    ExtractedPost,
+} from '@/types/index.js';
 import { useAuth } from '@/components/global/AuthProvider';
 import { redirect } from 'next/navigation';
 
@@ -35,6 +38,8 @@ const HomePage = () => {
     const [posts, setAllPosts] = useState<ExtractedPost[] | null>([
         samplePost,
     ]);
+    const [product, setProduct] =
+        useState<AmazonProductListing | null>(null);
     const [error, setError] = useState('');
 
     const addPost = async (url: string) => {
@@ -42,7 +47,7 @@ const HomePage = () => {
         setError('');
 
         try {
-            const response = await axios.post<ExtractedPost>(
+            const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/posts/url`,
                 { url },
                 {
@@ -54,13 +59,45 @@ const HomePage = () => {
             );
 
             setAllPosts([response.data]);
-            // TODO: For Multiple posts
-            // setAllPosts((prev: ExtractedPost[] | null) => (prev ? [...prev, response.data] : [response.data]));
+
+            // Automatically call addProduct in the background
+            if (response.data.url) {
+                addProduct(response.data.url);
+            }
         } catch (err) {
             console.error(err);
             setError('Failed to load content. Please try again.');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const addProduct = async (url: string) => {
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/products/analyze?url=${url}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response?.data) {
+                setProduct(
+                    response.data as unknown as AmazonProductListing
+                );
+            } else if (response.status === 401) {
+                redirect('/auth');
+            } else if (response.status === 403) {
+                redirect('/auth');
+            } else {
+                console.error(response);
+            }
+        } catch (err: AxiosError | any) {
+            console.error(err);
+            setError('Failed to load product. Please try again.');
         }
     };
 
@@ -70,9 +107,7 @@ const HomePage = () => {
             if (!prev) return null;
             return prev.filter((post) => post._id !== id);
         });
-
-        // api
-        // setPosts(null);
+        // API call can be added here if needed
     };
 
     const handlePaste = async (
@@ -80,7 +115,7 @@ const HomePage = () => {
     ) => {
         e.preventDefault();
         setLink(link.trim());
-        addPost(link);
+        await addPost(link);
     };
 
     const handleTokens = async () => {
@@ -102,18 +137,15 @@ const HomePage = () => {
                 error?.response &&
                 [401, 403].includes(error?.response?.status)
             ) {
-                redirect('/auth')
+                redirect('/auth');
             }
-            console.error(
-                'Token verification failed:',
-                error
-            );
+            console.error('Token verification failed:', error);
         }
     };
 
     useEffect(() => {
-        handleTokens(); // Verify user on component mount
-    }, []); // Empty dependency to avoid infinite loop
+        handleTokens();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100">
@@ -153,14 +185,15 @@ const HomePage = () => {
                     </Alert>
                 )}
 
-                {/* <ExtractedPostView posts={posts} setAllPosts={setAllPosts} /> */}
                 <ExtractedPostView
                     post={posts?.[0] || null}
-                    // setAllPosts={setAllPosts}
                     handleDelete={handleDelete}
                 />
 
-                {/* <GeneratedProduct /> */}
+                {/* <GeneratedProductView
+                    post={products?.[0]}
+                    handleDelete={handleDelete}
+                /> */}
             </div>
         </div>
     );

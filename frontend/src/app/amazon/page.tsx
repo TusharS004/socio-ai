@@ -22,51 +22,46 @@ import {
 import { ProductCard } from '@/components/amazon/productCard';
 import { AmazonProductListing } from '@/types';
 
+const sampleProducts: AmazonProductListing[] = [
+    {
+        _id: '1',
+        title: 'Wireless Earbuds Pro',
+        price: '$129',
+        currency: 'USD',
+        images: ['/api/placeholder/400/400'],
+        status: 'listed',
+        stock: 11,
+        category: ['Electronics'],
+        description: 'High-quality wireless earbuds',
+    },
+    {
+        _id: '2',
+        title: 'Smart Watch Series X',
+        price: '200',
+        currency: '$USD',
+        images: ['/api/placeholder/400/400'],
+        status: 'draft',
+        stock: 7,
+        category: ['Wearables'],
+        description: 'Advanced smart watch with multiple features',
+    },
+    {
+        _id: '3',
+        title: 'Premium Headphones',
+        price: '$300',
+        currency: 'USD',
+        images: ['/api/placeholder/400/400'],
+        status: 'listed',
+        stock: 70,
+        category: ['Audio'],
+        description: 'High-fidelity premium headphones',
+    },
+];
+
 const AmazonPage = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [favorites, setFavorites] = useState(new Set());
-
-    const products: AmazonProductListing[] = [
-        {
-            _id: '1',
-            title: 'Wireless Earbuds Pro',
-            price: 129,
-            currency: 'USD',
-            imageUrl: '/api/placeholder/400/400',
-            status: 'listed',
-            rating: 4.5,
-            reviews: 128,
-            stock: 11,
-            category: 'Electronics',
-            description: 'High-quality wireless earbuds',
-        },
-        {
-            _id: '2',
-            title: 'Smart Watch Series X',
-            price: 200,
-            currency: 'USD',
-            imageUrl: '/api/placeholder/400/400',
-            status: 'draft',
-            rating: 4.8,
-            reviews: 256,
-            stock: 7,
-            category: 'Wearables',
-            description: 'Advanced smart watch with multiple features',
-        },
-        {
-            _id: '3',
-            title: 'Premium Headphones',
-            price: 300,
-            currency: 'USD',
-            imageUrl: '/api/placeholder/400/400',
-            status: 'listed',
-            rating: 4.7,
-            reviews: 89,
-            stock: 70,
-            category: 'Audio',
-            description: 'High-fidelity premium headphones',
-        },
-    ];
+    const [products, setProducts] = useState<AmazonProductListing[] | []>([]);
 
     const toggleFavorite = (productId: string) => {
         setFavorites((prev) => {
