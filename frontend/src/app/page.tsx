@@ -152,6 +152,7 @@ const HomePage = () => {
             if (!user) {
                 const res = await axios.get(
                     `${process.env.NEXT_PUBLIC_API_URL}/users/verify`,
+                    // https://socio-ai-8chs.onrender.com/api/users/verify
                     { withCredentials: true }
                 );
 

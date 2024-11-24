@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const verifyToken = (req, res, next) => {
     try {
         console.log(
-            req?.headers?.authorization,
+            req?.headers,
             '-+-',
             req?.cookies?.token,
             '-+-',
