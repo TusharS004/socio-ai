@@ -57,10 +57,11 @@ export const getAnalysis = async (req, res, next) => {
             })
         }
 
-        const getPost = await Post.findOne({ $or:[
+        const getPost = await Post.findOne({ $or: [
             {url: url},
             {_id: id} 
         ]});
+
         if(!getPost) {
             return res.status(404).json({
                 success: false,
@@ -81,10 +82,8 @@ export const getAnalysis = async (req, res, next) => {
         }
 
         // TODO:- Save The response.json Product.
-        
-
-        return res.status(200).json(response);
-
+        req.body = {...response, url, id};
+        next();
     } catch (error) {
         console.error(error.message || error);
         return res.status(500).json({

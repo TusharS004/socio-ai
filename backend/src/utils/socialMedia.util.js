@@ -61,7 +61,7 @@ export const getTweet = async (url, assetCwd) => {
         return null;
     } finally {
         if(fs.existsSync(assetCwd))
-            fs.rmdirSync(assetCwd, { recursive: true });
+            fs.rmSync(assetCwd, { recursive: true });
     }
 };
 
@@ -100,6 +100,6 @@ export const getInsta = async (url, assetCwd) => {
         return null;
     } finally {
         if(fs.existsSync(assetCwd))
-            fs.rmdirSync(assetCwd, { recursive: true });
+            fs.rmSync(assetCwd, { recursive: true });
     }
 };

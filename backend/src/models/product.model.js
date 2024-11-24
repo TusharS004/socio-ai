@@ -2,19 +2,22 @@ import { Schema, model } from 'mongoose';
 
 const productSchema = new Schema(
     {
+        url: {
+            type: String,
+        },
+        brand: {
+            type: String,
+        },
         title: {
             type: String,
             required: true,
-        },
-        url:{
-            type: String,
         },
         description: {
             type: String,
             required: true,
         },
         price: {
-            type: Number,
+            type: String,
             required: true,
         },
         currency: {
@@ -25,10 +28,15 @@ const productSchema = new Schema(
             type: Number,
             default: 0,
         },
-        category: [
+        category:[ 
             {
                 type: String,
-            },
+            }
+        ],
+        keywords: [
+            {
+                type: String,
+            }
         ],
         status: {
             type: String,
@@ -44,8 +52,8 @@ const productSchema = new Schema(
             {
                 type: {
                     url: { type: String, required: true },
-                    public_id: { type: String, required: true },
-                    _id: false
+                    publicId: { type: String, required: true },
+                    _id: false,
                 }, // Cloudinary URL
             },
         ],
@@ -53,8 +61,8 @@ const productSchema = new Schema(
             {
                 type: {
                     url: { type: String, required: true },
-                    public_id: { type: String, required: true },
-                    _id: false
+                    publicId: { type: String, required: true },
+                    _id: false,
                 }, // Cloudinary URL
             },
         ],
