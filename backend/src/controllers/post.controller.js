@@ -9,6 +9,7 @@ export const createPost = async (req, res) => {
         let { content, url, images = [], videos = [] } = req.body;
 
         if (url) {
+            url = url.trim().split('?')[0];
             const checExists = await Post.findOne({ url });
             if (checExists)
                 return res.status(200).json(checExists);
