@@ -7,10 +7,7 @@ import {
     TabsList,
     TabsTrigger,
 } from '@/components/ui/tabs';
-import {
-    Filter,
-    SortAsc,
-} from 'lucide-react';
+import { Filter, SortAsc } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,8 +16,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ProductCard } from '@/components/amazon/productCard';
 import { AmazonProductListing } from '@/types';
+import ProdListingCard from '@/components/amazon/ProdListing';
 
 const sampleProducts: AmazonProductListing[] = [
     {
@@ -59,21 +56,23 @@ const sampleProducts: AmazonProductListing[] = [
 ];
 
 const AmazonPage = () => {
-    const [sortBy, setSortBy] = useState('newest');
-    const [favorites, setFavorites] = useState(new Set());
-    const [products, setProducts] = useState<AmazonProductListing[] | []>([]);
+    // const [sortBy, setSortBy] = useState('newest');
+    // const [favorites, setFavorites] = useState(new Set());
+    const [products, setProducts] = useState<
+        AmazonProductListing[] | []
+    >([]);
 
-    const toggleFavorite = (productId: string) => {
-        setFavorites((prev) => {
-            const newFavorites = new Set(prev);
-            if (newFavorites.has(productId)) {
-                newFavorites.delete(productId);
-            } else {
-                newFavorites.add(productId);
-            }
-            return newFavorites;
-        });
-    };
+    // const toggleFavorite = (productId: string) => {
+    //     setFavorites((prev) => {
+    //         const newFavorites = new Set(prev);
+    //         if (newFavorites.has(productId)) {
+    //             newFavorites.delete(productId);
+    //         } else {
+    //             newFavorites.add(productId);
+    //         }
+    //         return newFavorites;
+    //     });
+    // };
 
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100">
@@ -162,49 +161,58 @@ const AmazonPage = () => {
 
                     <TabsContent value="all" className="mt-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {products.map((product: AmazonProductListing) => {
-                                if (product.stock === 0) {
-                                    return null;
+                            {products.map(
+                                (product: AmazonProductListing) => {
+                                    if (product.stock === 0) {
+                                        return null;
+                                    }
+                                    return (
+                                        <ProdListingCard
+                                            key={product._id}
+                                            product={product}
+                                            // isFavourite={favorites.has(product._id)}
+                                            // toggleFavorite={toggleFavorite}
+                                        />
+                                    );
                                 }
-                                return <ProductCard
-                                    key={product._id}
-                                    product={product}
-                                    isFavourite={favorites.has(product._id)}
-                                    toggleFavorite={toggleFavorite}
-                                />
-                            })}
+                            )}
                         </div>
                     </TabsContent>
 
                     <TabsContent value="listings" className="mt-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {products
-                                .filter((p) => p.status?.toString().toLowerCase() !== 'draft')
+                                .filter(
+                                    (p) =>
+                                        p.status
+                                            ?.toString()
+                                            .toLowerCase() !== 'draft'
+                                )
                                 .map((product) => (
-                                    <ProductCard
+                                    <ProdListingCard
                                         key={product._id}
                                         product={product}
-                                        isFavourite={favorites.has(product._id)}
-                                        toggleFavorite={toggleFavorite}
+                                        // isFavourite={favorites.has(product._id)}
+                                        // toggleFavorite={toggleFavorite}
                                     />
                                 ))}
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="watchlist" className="mt-6">
+                    {/* <TabsContent value="watchlist" className="mt-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {products
-                                .filter((p) => favorites.has(p._id))
+                                // .filter((p) => favorites.has(p._id))
                                 .map((product) => (
                                     <ProductCard
                                         key={product._id}
                                         product={product}
-                                        isFavourite={favorites.has(product._id)}
+                                        // isFavourite={favorites.has(product._id)}
                                         toggleFavorite={toggleFavorite}
                                     />
                                 ))}
                         </div>
-                    </TabsContent>
+                    </TabsContent> */}
                 </Tabs>
             </div>
         </div>

@@ -15,18 +15,10 @@ import { useAuth } from './AuthProvider';
 import Link from 'next/link';
 
 const Navbar = () => {
-    const { user, setUser } = useAuth();
+    const { user, logout } = useAuth();
     const handleLogout = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/logout`, {
-                withCredentials: true,
-            });
-
-            if (response.status === 200) {
-                setUser(null);
-            } else {
-                console.error("Failed to logout");
-            }
+            logout();
         } catch (error) {
             console.error(error);
         }

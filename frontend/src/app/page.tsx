@@ -11,13 +11,21 @@ import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-va
 import { Instagram, Twitter, Youtube } from 'lucide-react';
 import axios, { AxiosError } from 'axios';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ExtractedPostView } from '@/components/Home/ExtractedPost/extractedPost.main';
+import { ExtractedPostView } from '@/components/Home/ExtractedPost/extractedPost';
 import {
     AmazonProductListing,
     ExtractedPost,
 } from '@/types/index.js';
 import { useAuth } from '@/components/global/AuthProvider';
 import { redirect } from 'next/navigation';
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import ProductCard from '@/components/Home/GenerateProduct/ProductCard';
 
 const samplePost: ExtractedPost = {
     _id: '1',
@@ -35,6 +43,9 @@ const HomePage = () => {
     const [link, setLink] = useState('');
     const { user, setUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('post');
+    const [isGeneratingProduct, setIsGeneratingProduct] =
+        useState(false);
     const [posts, setAllPosts] = useState<ExtractedPost[] | null>([
         samplePost,
     ]);
@@ -98,6 +109,24 @@ const HomePage = () => {
         } catch (err: AxiosError | any) {
             console.error(err);
             setError('Failed to load product. Please try again.');
+        }
+    };
+
+    const handleGenerateProduct = async () => {
+        if (!posts?.[0]?.url) {
+            setError('Please add a post first');
+            return;
+        }
+        setIsGeneratingProduct(true);
+        setError('');
+        try {
+            await addProduct(posts[0].url);
+            setActiveTab('listing');
+        } catch (err) {
+            console.error(err);
+            setError('Failed to generate product listing');
+        } finally {
+            setIsGeneratingProduct(false);
         }
     };
 
@@ -185,15 +214,40 @@ const HomePage = () => {
                     </Alert>
                 )}
 
-                <ExtractedPostView
-                    post={posts?.[0] || null}
-                    handleDelete={handleDelete}
-                />
+                <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className="space-y-4 border-b-2 border-white"
+                >
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="post">Post</TabsTrigger>
+                        <TabsTrigger value="listing">
+                            Listing
+                        </TabsTrigger>
+                    </TabsList>
 
-                {/* <GeneratedProductView
-                    post={products?.[0]}
-                    handleDelete={handleDelete}
-                /> */}
+                    <TabsContent value="post" className="space-y-4">
+                        <ExtractedPostView
+                            post={posts?.[0] || null}
+                            handleDelete={handleDelete}
+                        />
+                        {posts?.[0] && (
+                            <Button
+                                onClick={handleGenerateProduct}
+                                disabled={isGeneratingProduct}
+                                className="w-full mt-4"
+                            >
+                                {isGeneratingProduct
+                                    ? 'Generating...'
+                                    : 'Generate Product Listing'}
+                            </Button>
+                        )}
+                    </TabsContent>
+
+                    {product && <TabsContent value="listing">
+                        <ProductCard product={product} />
+                    </TabsContent>}
+                </Tabs>
             </div>
         </div>
     );

@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { ExtractedPost } from '@/types/index.js';
-import { PostCard } from './extractedPost.post';
-import { CollapsibleSection } from './extractedPost.sections';
-import { MediaGrid } from './extractedPost.grid';
-import { DetailView } from './extractedPost.details';
+import { PostCard } from './PostCard';
+import { CollapsibleSection } from './CollapsibleSections';
+import { MediaGrid } from './PostMediaGrid';
+import { DetailView } from './PostDetailView';
 
 export function ExtractedPostView({
     post,
@@ -28,9 +28,9 @@ export function ExtractedPostView({
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 my-6">
             <PostCard
-                key={post.id}
+                key={post._id}
                 post={post}
                 // setSelectedPost={setSelectedPost}
                 handlePostDelete={handleDelete}

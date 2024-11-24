@@ -45,7 +45,7 @@ export const PostCard = ({
             </button>
 
             <div className="md:w-1/3">
-                {post?.images[0] ? (
+                {post?.images?.[0] ? (
                     <div className="aspect-video">
                         <Image
                             src={post.images[0]}

@@ -112,9 +112,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        setError(null);
+    const logout = async () => {
+        try {
+            setUser(null);
+            setError(null);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/logout`, {
+                withCredentials: true,
+            });
+
+            if (!response.data.success) {
+                setError(response.data.error);
+            }
+        } catch (error) {
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : 'Logout failed'
+            );
+            throw error;
+        }
     };
 
     return (

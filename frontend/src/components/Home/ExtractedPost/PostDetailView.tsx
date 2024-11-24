@@ -29,7 +29,7 @@ export const DetailView = ({ post, onClose }: DetailViewProps) => {
                             ) : (
                                 <img
                                     src={post.images?.[0] || ''}
-                                    alt={post.title}
+                                    alt={post.content.slice(0, 10) + '....png'}
                                     className="w-full h-full object-contain"
                                 />
                             )}
@@ -38,7 +38,7 @@ export const DetailView = ({ post, onClose }: DetailViewProps) => {
                         {/* Details Section */}
                         <div className="w-1/2 p-6 overflow-y-auto">
                             <h2 className="text-2xl font-bold mb-4">
-                                {post.title}
+                                {post.content.slice(0, 10) + '....png'}
                             </h2>
                             <p className="text-gray-300 mb-6">
                                 {post.content}
