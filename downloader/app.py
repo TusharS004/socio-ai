@@ -2,7 +2,10 @@
 
 from flask import Flask, jsonify, request
 from main import download_from_url
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
 
 @app.route('/api/url', methods=['POST'])
@@ -26,5 +29,7 @@ def greet():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    app.run(port=5000)  # Run on port 5000
+    port = int(os.environ.get('PORT', 5000))
+    # Run the server
+    app.run(host="0.0.0.0", port=port)
+    # app.run(debug=True)

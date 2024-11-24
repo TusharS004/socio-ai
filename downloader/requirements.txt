@@ -1,3 +1,4 @@
 yt-dlp
 instaloader
 flask
+python-dotenv
