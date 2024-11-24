@@ -174,14 +174,19 @@ export const generateTokenCont = async (req, res) => {
                 .json({ message: 'User not found' });
 
         return res
-            .cookie('token', token, { httpOnly: true })
+            .cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'Strict', // csrf
+            })
             .status(req.status || 201)
-            .json(req.json || {
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                isGuest: user.username.includes('guest'),
-            });
+            .json(
+                req.json || {
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    isGuest: user.username.includes('guest'),
+                }
+            );
     } catch (error) {
         console.error(error);
         return res.status(400).json({ message: error.message });
