@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 
 const verifyToken = (req, res, next) => {
     try {
+        console.log(req?.body);
+
         // console.log(
         //     req?.headers,
         //     '-+-',
