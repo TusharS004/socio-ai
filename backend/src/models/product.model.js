@@ -28,14 +28,16 @@ const productSchema = new Schema(
             type: Number,
             default: 0,
         },
-        category: {
-            type: String,
-        },
+        category:[
+            {
+                type: String,
+            }
+        ],
         keywords: [
             {
                 type: String,
             }
-        ], // comma seprated so, splitted stuff.
+        ],
         status: {
             type: String,
             enum: ['draft', 'listed'],

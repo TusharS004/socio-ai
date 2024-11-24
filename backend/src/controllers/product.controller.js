@@ -1,3 +1,4 @@
+import Post from '../models/post.model.js';
 import Product from '../models/product.model.js';
 
 export const getAllProducts = async (req, res) => {
@@ -27,17 +28,35 @@ export const createProduct = async (req, res) => {
     if(!req?.user?._id) {
         return res.status(403).json({ message: 'You are not authorized to create this product' });
     }
-    const { title, price, currency, description, image, category, video } = req.body;
+    const { Title, Brand, Description, Price, Currency, Keywords, Category, url, id} = req.body;
+
+    const getPost = await Post.findOne({
+        $or: [
+            {url}, {_id: id}
+        ]
+    });
+
+    if(!getPost) {
+        return res.status(404).json({
+            success: false,
+            message: "No Posts Found",
+        });
+    }
+
     const product = new Product({
-        title,
-        description,
-        price,
-        currency,
-        image,
-        video,
-        category: category.toString().split(',').map((category) => category.trim()),
+        title: Title,
+        description: Description,
+        price: Price,
+        currency: Currency,
+        images: getPost.images,
+        videos: getPost.videos,
+        url: url,
+        brand: Brand,
+        keywords: Keywords.split(',').map((key) => key.trim()),
+        category: Category.split('>').map((category) => category.trim()),
         owner: req.user._id,
     });
+
     try {
         const newProduct = await product.save();
         return res.status(201).json(newProduct);
