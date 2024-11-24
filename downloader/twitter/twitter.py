@@ -15,7 +15,8 @@ def download_tweet_media(url, shortcode):
         # yt-dlp options
         ydl_opts = {
             'format': 'best',
-            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.mp4'),
+            # 'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}.mp4'),
+            'outtmpl': os.path.join(absolute_download_path, f'x_{shortcode}_%(autonumber)s.%(ext)s'),
             'quiet': False
         }
 
