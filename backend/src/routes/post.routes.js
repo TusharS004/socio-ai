@@ -1,7 +1,7 @@
 import express from "express";
 import * as postController from "../controllers/post.controller.js";
 import verifyToken from "../middlewares/verifyToken.mid.js"
-import { getPost } from "../controllers/getPost.controller.js";
+import { getAnalysis, getPost } from "../controllers/getServices.controller.js";
 import upload from "../middlewares/upload.multer.js";
 
 const router = express.Router();
@@ -21,5 +21,6 @@ router.route('/:id')
     .put(verifyToken, postController.updatePost)
     .delete(verifyToken, postController.deletePost);
 
+router.route('/analyze').post(verifyToken,getAnalysis);
 
 export default router;

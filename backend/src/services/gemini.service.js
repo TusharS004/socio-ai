@@ -3,7 +3,7 @@ import { GoogleAIFileManager } from '@google/generative-ai/server';
 import { generateWithImage } from '../utils/image.util.js';
 import { generateWithVideo } from '../utils/video.util.js';
 
-export const generateWithGemini = async (mediaPath) => {
+export const generateWithGemini = async (mediaPath, content) => {
 
     const API_KEY = process.env.GOOGLE_API_KEY;
     if(!API_KEY) {
@@ -23,13 +23,12 @@ export const generateWithGemini = async (mediaPath) => {
     await mediaPath.forEach(({ url, public_id}) => {
         if (url.includes('.mp4')) {
             generateWithVideo(url, video_model, fileManager);
-        } else if (url.includes('.jpg')) {
+        } else if (url.includes('.jpg') || url.includes('.png') || url.includes('jpeg')) {
             generateWithImage(url, image_model, fileManager);
         }
     });
 
     // ek saath krne vala system
 
-    // return ...
-    // ...metadata
+    return 1;
 }

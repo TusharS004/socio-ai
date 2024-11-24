@@ -2,7 +2,7 @@ import { Router } from "express";
 import prodRoutes from "./product.routes.js";
 import userRoutes from "./user.routes.js";
 import postRoutes from "./post.routes.js";
-import { getPost } from '../controllers/getPost.controller.js';
+import { getPost } from '../controllers/getServices.controller.js';
 
 const router = Router();
 
