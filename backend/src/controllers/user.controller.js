@@ -157,40 +157,51 @@ export const deleteUser = async (req, res) => {
 
 export const generateTokenCont = async (req, res) => {
     try {
-        if (!req.user._id) {
-            return res.status(403).json({ message: 'You are not authorized to create this product' });
+        if (!req.user || !req.user._id) {
+            return res
+                .status(403)
+                .json({
+                    message:
+                        'You are not authorized to create this product',
+                });
         }
         const token = await generateToken(req.user._id);
 
-
         const user = await User.findById(req.user._id);
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (!user)
+            return res
+                .status(404)
+                .json({ message: 'User not found' });
 
         return res
-            .cookie('token', token, {
-                httpOnly: true,
-            })
+            .cookie('token', token, { httpOnly: true })
             .status(req.status || 201)
             .json(req.json || {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
-                isGuest: user.username.includes('guest')
+                isGuest: user.username.includes('guest'),
             });
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         return res.status(400).json({ message: error.message });
     }
 };
 
+
 export const verifyTokenCont = async (req, res) => {
     try {
-        if (!req.user) return res.status(404).send({ success: false, message: "User not Found!" });
+        if (!req.user || !req.user._id) {
+            return res
+                .status(404)
+                .send({ success: false, message: 'User not Found!' });
+        }
         const user = await User.findById(req.user._id);
         return res.status(200).json(user);
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ success: false, message: error.message });
+        return res
+            .status(400)
+            .json({ success: false, message: error.message });
     }
 };

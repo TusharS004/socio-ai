@@ -7,7 +7,12 @@ const verifyToken = (req, res, next) => {
             '-+-',
             req?.cookies?.token,
             '-+-',
-            req.cookies
+            req.cookies,
+            '-+-',
+            req.cookie,
+            '-+-',
+            req.headers?.authorization?.split(' ')[1],
+            '-----------------------------------------------------------------'
         );
 
         const token =
