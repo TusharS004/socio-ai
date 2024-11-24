@@ -12,6 +12,7 @@ app = Flask(__name__)
 def greet():
     try:
         url = request.json.get('url')  # Access the URL from JSON
+        print(f'\n\nurl------{url}\n\n')
         if not url:
             return jsonify({"error": "URL is required"}), 400
 
@@ -32,4 +33,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     # Run the server
     app.run(host="0.0.0.0", port=port)
-    # app.run(debug=True)
+    app.run(debug=True)
