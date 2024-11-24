@@ -2,6 +2,7 @@ import path from 'path';
 import { getInsta, getTweet } from "../utils/socialMedia.util.js";
 import Post from '../models/post.model.js';
 import { generateWithGemini } from '../services/gemini.service.js'
+import fs from 'fs';
 
 export const getPost = async (req, res, next) => {
     const urlString = req.body.url;
@@ -48,6 +49,19 @@ export const getPost = async (req, res, next) => {
 };
 
 export const getAnalysis = async (req, res, next) => {
+    if (fs.existsSync("../final")) {
+        fs.rmSync("../final", { recursive: true,force: true });
+    }
+    if (fs.existsSync("../media")) {
+        fs.rmSync("../media", { recursive: true, force: true });
+    }
+    if (fs.existsSync("../temp")) {
+        fs.rmSync("../temp", { recursive: true, force: true });
+    }
+    if (!fs.existsSync("../final") && !fs.existsSync("../media") && !fs.existsSync("../temp")) {
+        console.log("All Directories Cleared");
+    }
+
     try {
         const { url, id } = req.query;
         if(!url && !id) {
