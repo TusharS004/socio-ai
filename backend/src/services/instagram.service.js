@@ -15,6 +15,8 @@ const fetchInstagramDataWithMedia = async (url) => {
     }
 
     console.log(download_media);
+    const data = download_media;
+    console.log(download_media.json());
     
 
     // const data = download_media.json();
