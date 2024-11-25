@@ -48,7 +48,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-app = Flask(_name_)
+app = Flask(__name__)
 
 @app.route('/api/url', methods=['POST'])
 def greet():
@@ -71,7 +71,7 @@ def greet():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if _name_ == '_main_':
+if __name__ == '_main_':
     port = int(os.environ.get('PORT', 5000))
     # Run the server
     app.run(host="0.0.0.0", port=port)
