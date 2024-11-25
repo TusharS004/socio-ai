@@ -1,5 +1,5 @@
 const fetchInstagramDataWithMedia = async (url) => {
-    console.log("Fetching Instagram data with media.");
+    console.log(`Hello inside fetchInstagramDataWithMedia ${url} Fetching Instagram data with media.`);
     const download_media = await fetch(process.env.FLASK_URL + "/api/url", {
         method: "POST",
         headers: {
@@ -7,13 +7,14 @@ const fetchInstagramDataWithMedia = async (url) => {
         },
         body: JSON.stringify({ url: url }),
     });
-
+    console.log("after flask");
+    
     if(!download_media) {
         console.error("Error fetching Instagram data.");
         return;
     }
 
-    const data = await download_media.json();
+    const data = download_media.json();
     if (!data.message) {
         console.error("Error fetching Instagram data. ", data);
         return;
