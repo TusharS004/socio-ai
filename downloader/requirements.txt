@@ -2,3 +2,5 @@ yt-dlp
 instaloader
 flask
 python-dotenv
+honcho
+gunicorn

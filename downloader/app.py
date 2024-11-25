@@ -1,5 +1,3 @@
-# modify instagram.py and twitter.py as it must return json object and image / video download should begin in background
-
 from flask import Flask, jsonify, request
 from main import download_from_url
 from dotenv import load_dotenv
@@ -7,6 +5,14 @@ import os
 
 load_dotenv()
 app = Flask(__name__)
+
+@app.route('/testing', methods=['GET'])
+def hello():
+    try:
+        return "Python server is live", 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/api/url', methods=['POST'])
 def greet():
@@ -31,6 +37,7 @@ def greet():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
+    host = os.getenv('HOST', '127.0.0.1')
     # Run the server
-    app.run(debug=False)
-    app.run(port=port)
+    app.run(host=host, port=port)
+    app.run(debug=True)
